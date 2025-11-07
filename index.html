@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每天进步一点点 - 小学生百分数成长计算器</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            flex: 1;
+            min-width: 300px;
+            max-width: 500px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .card-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-title i {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .progress-card {
+            border-top: 5px solid #4cd964;
+        }
+        
+        .regress-card {
+            border-top: 5px solid #ff3b30;
+        }
+        
+        .result {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .progress-result {
+            color: #4cd964;
+        }
+        
+        .regress-result {
+            color: #ff3b30;
+        }
+        
+        .days-input {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .input-group {
+            margin: 15px 0;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .input-group label {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .input-group input {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px 20px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1.1rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .preset-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .preset-button {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .preset-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .chart-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+        }
+        
+        .explanation {
+            margin-top: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            line-height: 1.6;
+        }
+        
+        .explanation h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .highlight {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .fun-facts {
+            margin-top: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            line-height: 1.6;
+        }
+        
+        .fun-facts h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .fact-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .sparkle {
+            display: inline-block;
+            animation: sparkle 1.5s infinite;
+        }
+        
+        @keyframes sparkle {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        @media (max-width: 768px) {
+            .cards-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .card {
+                width: 100%;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>每天进步一点点 ✨</h1>
+            <p class="subtitle">探索每天进步1%与每天退步1%的巨大差异，理解复利效应的惊人力量！</p>
+        </header>
+        
+        <div class="days-input">
+            <div class="input-group">
+                <label for="dailyAmount">每天做的量：</label>
+                <input type="number" id="dailyAmount" min="1" value="1">
+            </div>
+            
+            <div class="input-group">
+                <label for="days">选择天数：</label>
+                <input type="number" id="days" min="1" max="1000" value="365">
+            </div>
+            
+            <div class="preset-buttons">
+                <button class="preset-button" data-days="7">一周</button>
+                <button class="preset-button" data-days="30">一个月</button>
+                <button class="preset-button" data-days="90">三个月</button>
+                <button class="preset-button" data-days="365">一年</button>
+                <button class="preset-button" data-days="730">两年</button>
+            </div>
+        </div>
+        
+        <div class="cards-container">
+            <div class="card progress-card">
+                <h2 class="card-title">📈 每天进步1%</h2>
+                <div class="result progress-result" id="progress-result">37.78</div>
+                <p>经过 <span id="progress-days">365</span> 天后，你的能力将是原来的 <span id="progress-times">37.78</span> 倍！</p>
+                <p>每天做的量的总量：<span id="progress-total">37.78</span></p>
+                <p class="fact-item">这就像从普通学生变成了<span class="highlight">超级学霸</span>！</p>
+            </div>
+            
+            <div class="card regress-card">
+                <h2 class="card-title">📉 每天退步1%</h2>
+                <div class="result regress-result" id="regress-result">0.03</div>
+                <p>经过 <span id="regress-days">365</span> 天后，你的能力将是原来的 <span id="regress-times">0.03</span> 倍...</p>
+                <p>每天做的量的总量：<span id="regress-total">0.03</span></p>
+                <p class="fact-item">这就像把<span class="highlight">37个你</span>的知识都忘光了！</p>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <canvas id="growthChart"></canvas>
+        </div>
+        
+        <div class="explanation">
+            <h2>复利的力量 <span class="sparkle">✨</span></h2>
+            <p>这个简单的计算展示了复利的惊人效果。每天进步1%，看似微不足道，但经过一年的积累，你的能力将增长到原来的 <span class="highlight" id="explanation-progress">37.8</span> 倍！</p>
+            <p>相反，每天退步1%，一年后你的能力只剩下原来的 <span class="highlight" id="explanation-regress">0.03</span> 倍。</p>
+            <p>这个原理不仅适用于学习，也适用于个人成长、理财等各个方面。坚持每天进步一点点，长期积累会产生惊人的变化！</p>
+        </div>
+        
+        <div class="fun-facts">
+            <h2>有趣的对比 <span class="sparkle">✨</span></h2>
+            <div class="fact-item">
+                <p><strong>一年进步37倍意味着什么？</strong></p>
+                <p>这就像你原本只能跑100米，一年后能跑3.7公里！或者原本只能做1道数学题，一年后能做37道！</p>
+            </div>
+            <div class="fact-item">
+                <p><strong>每天进步1% vs 每天退步1%</strong></p>
+                <p>一年后，进步者和退步者之间的差距是 <span class="highlight">1260倍</span>！这就像一个人有1260块糖，而另一个人只有1块！</p>
+            </div>
+            <div class="fact-item">
+                <p><strong>如果坚持三年...</strong></p>
+                <p>每天进步1%，三年后你的能力将是原来的 <span class="highlight">54000倍</span>！这就像从一颗小树苗长成了参天大树！</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const daysInput = document.getElementById('days');
+        const dailyAmountInput = document.getElementById('dailyAmount');
+        const progressResult = document.getElementById('progress-result');
+        const regressResult = document.getElementById('regress-result');
+        const progressDays = document.getElementById('progress-days');
+        const regressDays = document.getElementById('regress-days');
+        const progressTimes = document.getElementById('progress-times');
+        const regressTimes = document.getElementById('regress-times');
+        const progressTotal = document.getElementById('progress-total');
+        const regressTotal = document.getElementById('regress-total');
+        const explanationProgress = document.getElementById('explanation-progress');
+        const explanationRegress = document.getElementById('explanation-regress');
+        const presetButtons = document.querySelectorAll('.preset-button');
+        
+        // 初始化图表
+        const ctx = document.getElementById('growthChart').getContext('2d');
+        let growthChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: '每天进步1%',
+                        data: [],
+                        borderColor: '#4cd964',
+                        backgroundColor: 'rgba(76, 217, 100, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4 // 这个值会使线条更弯曲
+                    },
+                    {
+                        label: '每天退步1%',
+                        data: [],
+                        borderColor: '#ff3b30',
+                        backgroundColor: 'rgba(255, 59, 48, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4 // 这个值会使线条更弯曲
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '进步与退步的长期趋势',
+                        color: '#fff',
+                        font: {
+                            size: 18
+                        }
+                    },
+                    legend: {
+                        labels: {
+                            color: '#fff',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: '天数',
+                            color: '#fff'
+                        },
+                        ticks: {
+                            color: '#fff'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: '能力倍数',
+                            color: '#fff'
+                        },
+                        ticks: {
+                            color: '#fff'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        type: 'linear' // 改为线性坐标，更容易看出曲线
+                    }
+                }
+            }
+        });
+        
+        // 计算函数
+        function calculateResults() {
+            const days = parseInt(daysInput.value);
+            const dailyAmount = parseFloat(dailyAmountInput.value);
+            
+            // 计算进步和退步的结果
+            const progressValue = Math.pow(1.01, days);
+            const regressValue = Math.pow(0.99, days);
+            
+            // 计算每天做的量的总量
+            const progressTotalValue = dailyAmount * progressValue;
+            const regressTotalValue = dailyAmount * regressValue;
+            
+            // 更新结果
+            progressResult.textContent = progressValue.toFixed(2);
+            regressResult.textContent = regressValue.toFixed(2);
+            
+            progressDays.textContent = days;
+            regressDays.textContent = days;
+            
+            progressTimes.textContent = progressValue.toFixed(2);
+            regressTimes.textContent = regressValue.toFixed(2);
+            
+            progressTotal.textContent = progressTotalValue.toFixed(2);
+            regressTotal.textContent = regressTotalValue.toFixed(2);
+            
+            // 更新说明中的数字
+            explanationProgress.textContent = Math.pow(1.01, 365).toFixed(1);
+            explanationRegress.textContent = Math.pow(0.99, 365).toFixed(2);
+            
+            // 更新图表
+            updateChart(days);
+        }
+        
+        // 更新图表数据
+        function updateChart(days) {
+            const labels = [];
+            const progressData = [];
+            const regressData = [];
+            
+            // 生成足够多的数据点来形成曲线
+            const totalPoints = Math.min(100, days); // 最多100个点，避免性能问题
+            const step = Math.max(1, Math.floor(days / totalPoints));
+            
+            for (let i = 1; i <= days; i += step) {
+                labels.push(i);
+                progressData.push(Math.pow(1.01, i));
+                regressData.push(Math.pow(0.99, i));
+            }
+            
+            // 确保包含最后一天的数据
+            if (days % step !== 0) {
+                labels.push(days);
+                progressData.push(Math.pow(1.01, days));
+                regressData.push(Math.pow(0.99, days));
+            }
+            
+            growthChart.data.labels = labels;
+            growthChart.data.datasets[0].data = progressData;
+            growthChart.data.datasets[1].data = regressData;
+            growthChart.update();
+        }
+        
+        // 初始化
+        calculateResults();
+        
+        // 监听天数变化
+        daysInput.addEventListener('input', calculateResults);
+        dailyAmountInput.addEventListener('input', calculateResults);
+        
+        // 预设按钮点击事件
+        presetButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const days = button.getAttribute('data-days');
+                daysInput.value = days;
+                calculateResults();
+            });
+        });
+    </script>
+</body>
+</html>
