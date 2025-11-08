@@ -3,494 +3,686 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>每天进步一点点 - 小学生百分数成长计算器</title>
+    <title>百分数教学：机器人能力配置系统</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Comic Sans MS', 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #1a2980, #26d0ce);
-            color: #fff;
+            background-color: #f8f9fa;
             min-height: 100vh;
-            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 10px;
+            color: #333;
+            line-height: 1.4;
+            overflow-x: hidden;
         }
         
         .container {
-            max-width: 1200px;
-            width: 100%;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 20px;
-        }
-        
-        h1 {
-            font-size: 2.8rem;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .cards-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 30px;
-            justify-content: center;
-            margin-bottom: 40px;
+            max-width: 1200px;
+            width: 100%;
+            gap: 12px;
+            margin-top: 8px;
         }
         
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            flex: 1;
-            min-width: 300px;
-            max-width: 500px;
-            transition: transform 0.3s ease;
-        }
-        
-        .card:hover {
-            transform: translateY(-10px);
-        }
-        
-        .card-title {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .card-title i {
-            margin-right: 10px;
-            font-size: 1.5rem;
-        }
-        
-        .progress-card {
-            border-top: 5px solid #4cd964;
-        }
-        
-        .regress-card {
-            border-top: 5px solid #ff3b30;
-        }
-        
-        .result {
-            font-size: 3.5rem;
-            font-weight: bold;
-            margin: 20px 0;
+        .header {
             text-align: center;
+            margin-bottom: 5px;
+            width: 100%;
+            padding: 8px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         
-        .progress-result {
-            color: #4cd964;
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 1.4rem;
+            font-weight: 700;
         }
         
-        .regress-result {
-            color: #ff3b30;
-        }
-        
-        .days-input {
+        .left-column {
+            flex: 1;
+            min-width: 280px;
             display: flex;
             flex-direction: column;
+            gap: 12px;
+        }
+        
+        .input-section {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-left: 3px solid #3498db;
+        }
+        
+        .section-title {
+            font-size: 1.05rem;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            display: flex;
             align-items: center;
-            margin: 30px 0;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+        }
+        
+        .section-title i {
+            margin-right: 6px;
+            color: #3498db;
         }
         
         .input-group {
-            margin: 15px 0;
-            text-align: center;
-            width: 100%;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
         }
         
         .input-group label {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
             display: block;
+            margin-bottom: 4px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.85rem;
+        }
+        
+        .input-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .ability-icon {
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e3f2fd;
+            border-radius: 5px;
+            color: #3498db;
+            font-weight: bold;
+            font-size: 0.75rem;
         }
         
         .input-group input {
-            width: 100%;
-            max-width: 300px;
-            padding: 12px 20px;
-            border-radius: 50px;
-            border: none;
-            font-size: 1.1rem;
+            flex: 1;
+            padding: 7px 8px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 11px;
+            transition: all 0.3s;
+            color: #333;
+        }
+        
+        .input-group input:focus {
+            border-color: #3498db;
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+        }
+        
+        .value-display {
+            width: 45px;
             text-align: center;
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+            color: #3498db;
+            background: #e3f2fd;
+            padding: 4px 5px;
+            border-radius: 4px;
+            font-size: 0.75rem;
         }
         
-        .preset-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
+        .sum-display {
+            text-align: center;
+            padding: 8px;
+            margin-top: 5px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 0.85rem;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
         }
         
-        .preset-button {
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: none;
-            background: rgba(255, 255, 255, 0.2);
+        .sum-display.valid {
+            border-color: #2ecc71;
+            background: #e8f8ef;
+            color: #27ae60;
+        }
+        
+        .sum-display.invalid {
+            border-color: #e74c3c;
+            background: #fdedec;
+            color: #c0392b;
+        }
+        
+        .message {
+            text-align: center;
+            margin-top: 8px;
+            font-weight: bold;
+            min-height: 16px;
+            padding: 5px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            background: #fdedec;
+        }
+        
+        .success-message {
+            color: #27ae60;
+            background: #e8f8ef;
+        }
+        
+        .reset-btn {
+            background: #3498db;
             color: white;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 5px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            font-size: 11px;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-top: 10px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
         }
         
-        .preset-button:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.05);
+        .reset-btn:hover {
+            background: #2980b9;
+        }
+        
+        .concept-explanation {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-left: 3px solid #9b59b6;
+        }
+        
+        .concept-explanation h3 {
+            color: #2c3e50;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .concept-explanation h3 i {
+            margin-right: 6px;
+            color: #9b59b6;
+        }
+        
+        .concept-explanation p {
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 0.75rem;
+        }
+        
+        .chart-section {
+            flex: 1.5;
+            min-width: 280px;
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-left: 3px solid #2ecc71;
+            display: flex;
+            flex-direction: column;
         }
         
         .chart-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-top: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             width: 100%;
+            flex: 1;
+            min-height: 300px;
         }
         
-        .explanation {
-            margin-top: 40px;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            line-height: 1.6;
-        }
-        
-        .explanation h2 {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .highlight {
-            color: #ffd700;
-            font-weight: bold;
-        }
-        
-        .fun-facts {
-            margin-top: 40px;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            line-height: 1.6;
-        }
-        
-        .fun-facts h2 {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .fact-item {
-            margin-bottom: 15px;
+        .teaching-info {
+            margin-top: 12px;
             padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            width: 100%;
+            border-left: 3px solid #f39c12;
         }
         
-        .sparkle {
-            display: inline-block;
-            animation: sparkle 1.5s infinite;
+        .teaching-info h3 {
+            color: #2c3e50;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
         }
         
-        @keyframes sparkle {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+        .teaching-info h3 i {
+            margin-right: 6px;
+            color: #f39c12;
         }
         
-        @media (max-width: 768px) {
-            .cards-container {
+        .teaching-info p {
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 0.75rem;
+        }
+        
+        .show-info-btn {
+            display: none;
+            background: #f39c12;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 9px;
+            margin: 6px auto;
+            width: 110px;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 1100px) {
+            .container {
                 flex-direction: column;
-                align-items: center;
             }
             
-            .card {
+            .left-column, .chart-section {
                 width: 100%;
             }
             
-            h1 {
-                font-size: 2.2rem;
+            .chart-container {
+                min-height: 350px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.2rem;
+            }
+            
+            .chart-container {
+                min-height: 350px;
+            }
+            
+            .input-container {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .value-display {
+                width: 100%;
+            }
+        }
+        
+        /* 针对1440×900分辨率的特殊优化 */
+        @media screen and (max-height: 900px) {
+            body {
+                padding: 8px;
+            }
+            
+            .container {
+                gap: 10px;
+                margin-top: 5px;
+            }
+            
+            .header {
+                padding: 6px;
+                margin-bottom: 4px;
+            }
+            
+            .header h1 {
+                font-size: 1.3rem;
+                margin-bottom: 4px;
+            }
+            
+            .input-section, .chart-section, .concept-explanation {
+                padding: 10px;
+            }
+            
+            .chart-container {
+                min-height: 320px;
+            }
+            
+            .teaching-info {
+                margin-top: 8px;
+                padding: 8px;
+            }
+        }
+        
+        /* 针对小屏幕的进一步优化 */
+        @media screen and (max-height: 800px) {
+            .chart-container {
+                min-height: 300px;
+            }
+            
+            .input-group {
+                margin-bottom: 6px;
+            }
+            
+            .teaching-info, .concept-explanation {
+                display: none;
+            }
+            
+            .show-info-btn {
+                display: block;
+            }
+        }
+        
+        @media screen and (max-height: 700px) {
+            .chart-container {
+                min-height: 280px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="header">
+        <h1>百分数教学：机器人能力配置系统</h1>
+    </div>
+    
     <div class="container">
-        <header>
-            <h1>每天进步一点点 ✨</h1>
-            <p class="subtitle">探索每天进步1%与每天退步1%的巨大差异，理解复利效应的惊人力量！</p>
-        </header>
-        
-        <div class="days-input">
-            <div class="input-group">
-                <label for="dailyAmount">每天做的量：</label>
-                <input type="number" id="dailyAmount" min="1" value="1">
+        <div class="left-column">
+            <div class="input-section">
+                <h2 class="section-title">
+                    <i>⚙️</i> 配置能力百分比
+                </h2>
+                
+                <div class="input-group">
+                    <label for="endurance">持久续航</label>
+                    <div class="input-container">
+                        <div class="ability-icon">🔋</div>
+                        <input type="number" id="endurance" min="0" max="100" value="25" class="value-input">
+                        <div class="value-display"><span id="endurance-value">25</span>%</div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="burst">瞬时爆发</label>
+                    <div class="input-container">
+                        <div class="ability-icon">⚡</div>
+                        <input type="number" id="burst" min="0" max="100" value="20" class="value-input">
+                        <div class="value-display"><span id="burst-value">20</span>%</div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="perception">环境感知</label>
+                    <div class="input-container">
+                        <div class="ability-icon">👁️</div>
+                        <input type="number" id="perception" min="0" max="100" value="15" class="value-input">
+                        <div class="value-display"><span id="perception-value">15</span>%</div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="intelligence">决策智能</label>
+                    <div class="input-container">
+                        <div class="ability-icon">🧠</div>
+                        <input type="number" id="intelligence" min="0" max="100" value="25" class="value-input">
+                        <div class="value-display"><span id="intelligence-value">25</span>%</div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="strength">力量强度</label>
+                    <div class="input-container">
+                        <div class="ability-icon">💪</div>
+                        <input type="number" id="strength" min="0" max="100" value="15" class="value-input">
+                        <div class="value-display"><span id="strength-value">15</span>%</div>
+                    </div>
+                </div>
+                
+                <div class="sum-display" id="sumDisplay">
+                    当前总和: <span id="total">100</span>%
+                </div>
+                
+                <div class="message error-message" id="error"></div>
+                <div class="message success-message" id="success">✓ 百分比总和为100%，雷达图已更新！</div>
+                
+                <button class="reset-btn" id="resetBtn">
+                    <i>🔄</i> 重置为默认值
+                </button>
+                
+                <button class="show-info-btn" id="showInfoBtn">
+                    显示教学信息
+                </button>
             </div>
             
-            <div class="input-group">
-                <label for="days">选择天数：</label>
-                <input type="number" id="days" min="1" max="1000" value="365">
+            <div class="concept-explanation" id="conceptExplanation">
+                <h3><i>📚</i> 百分数概念</h3>
+                <p>百分数是一种表示比例的方法，它将一个数表示为100的分数。例如，25%表示25/100，即1/4。</p>
+                <p>在机器人能力配置中，我们将总能力视为100%，然后将其分配到五个不同方面。这种分配方式可以帮助我们理解百分数的含义、加法运算和数据可视化。</p>
+            </div>
+        </div>
+        
+        <div class="chart-section">
+            <h2 class="section-title">
+                <i>📊</i> 能力雷达图
+            </h2>
+            <div class="chart-container">
+                <canvas id="radarChart"></canvas>
             </div>
             
-            <div class="preset-buttons">
-                <button class="preset-button" data-days="7">一周</button>
-                <button class="preset-button" data-days="30">一个月</button>
-                <button class="preset-button" data-days="90">三个月</button>
-                <button class="preset-button" data-days="365">一年</button>
-                <button class="preset-button" data-days="730">两年</button>
-            </div>
-        </div>
-        
-        <div class="cards-container">
-            <div class="card progress-card">
-                <h2 class="card-title">📈 每天进步1%</h2>
-                <div class="result progress-result" id="progress-result">37.78</div>
-                <p>经过 <span id="progress-days">365</span> 天后，你的能力将是原来的 <span id="progress-times">37.78</span> 倍！</p>
-                <p>每天做的量的总量：<span id="progress-total">37.78</span></p>
-                <p class="fact-item">这就像从普通学生变成了<span class="highlight">超级学霸</span>！</p>
-            </div>
-            
-            <div class="card regress-card">
-                <h2 class="card-title">📉 每天退步1%</h2>
-                <div class="result regress-result" id="regress-result">0.03</div>
-                <p>经过 <span id="regress-days">365</span> 天后，你的能力将是原来的 <span id="regress-times">0.03</span> 倍...</p>
-                <p>每天做的量的总量：<span id="regress-total">0.03</span></p>
-                <p class="fact-item">这就像把<span class="highlight">37个你</span>的知识都忘光了！</p>
-            </div>
-        </div>
-        
-        <div class="chart-container">
-            <canvas id="growthChart"></canvas>
-        </div>
-        
-        <div class="explanation">
-            <h2>复利的力量 <span class="sparkle">✨</span></h2>
-            <p>这个简单的计算展示了复利的惊人效果。每天进步1%，看似微不足道，但经过一年的积累，你的能力将增长到原来的 <span class="highlight" id="explanation-progress">37.8</span> 倍！</p>
-            <p>相反，每天退步1%，一年后你的能力只剩下原来的 <span class="highlight" id="explanation-regress">0.03</span> 倍。</p>
-            <p>这个原理不仅适用于学习，也适用于个人成长、理财等各个方面。坚持每天进步一点点，长期积累会产生惊人的变化！</p>
-        </div>
-        
-        <div class="fun-facts">
-            <h2>有趣的对比 <span class="sparkle">✨</span></h2>
-            <div class="fact-item">
-                <p><strong>一年进步37倍意味着什么？</strong></p>
-                <p>这就像你原本只能跑100米，一年后能跑3.7公里！或者原本只能做1道数学题，一年后能做37道！</p>
-            </div>
-            <div class="fact-item">
-                <p><strong>每天进步1% vs 每天退步1%</strong></p>
-                <p>一年后，进步者和退步者之间的差距是 <span class="highlight">1260倍</span>！这就像一个人有1260块糖，而另一个人只有1块！</p>
-            </div>
-            <div class="fact-item">
-                <p><strong>如果坚持三年...</strong></p>
-                <p>每天进步1%，三年后你的能力将是原来的 <span class="highlight">54000倍</span>！这就像从一颗小树苗长成了参天大树！</p>
+            <div class="teaching-info" id="teachingInfo">
+                <h3><i>💡</i> 教学提示</h3>
+                <p>• 百分数表示一个数是另一个数的百分之几，通常用"%"符号表示。</p>
+                <p>• 当所有能力值的百分比总和为100%时，表示资源已完全分配。</p>
+                <p>• 雷达图可以直观展示各项能力的相对强弱。</p>
             </div>
         </div>
     </div>
 
     <script>
-        // 获取DOM元素
-        const daysInput = document.getElementById('days');
-        const dailyAmountInput = document.getElementById('dailyAmount');
-        const progressResult = document.getElementById('progress-result');
-        const regressResult = document.getElementById('regress-result');
-        const progressDays = document.getElementById('progress-days');
-        const regressDays = document.getElementById('regress-days');
-        const progressTimes = document.getElementById('progress-times');
-        const regressTimes = document.getElementById('regress-times');
-        const progressTotal = document.getElementById('progress-total');
-        const regressTotal = document.getElementById('regress-total');
-        const explanationProgress = document.getElementById('explanation-progress');
-        const explanationRegress = document.getElementById('explanation-regress');
-        const presetButtons = document.querySelectorAll('.preset-button');
+        // 获取输入元素
+        const inputs = {
+            endurance: document.getElementById('endurance'),
+            burst: document.getElementById('burst'),
+            perception: document.getElementById('perception'),
+            intelligence: document.getElementById('intelligence'),
+            strength: document.getElementById('strength')
+        };
         
-        // 初始化图表
-        const ctx = document.getElementById('growthChart').getContext('2d');
-        let growthChart = new Chart(ctx, {
-            type: 'line',
+        const valueDisplays = {
+            endurance: document.getElementById('endurance-value'),
+            burst: document.getElementById('burst-value'),
+            perception: document.getElementById('perception-value'),
+            intelligence: document.getElementById('intelligence-value'),
+            strength: document.getElementById('strength-value')
+        };
+        
+        const totalElement = document.getElementById('total');
+        const errorElement = document.getElementById('error');
+        const successElement = document.getElementById('success');
+        const resetBtn = document.getElementById('resetBtn');
+        const sumDisplay = document.getElementById('sumDisplay');
+        const showInfoBtn = document.getElementById('showInfoBtn');
+        const teachingInfo = document.getElementById('teachingInfo');
+        const conceptExplanation = document.getElementById('conceptExplanation');
+        
+        // 默认值
+        const defaultValues = {
+            endurance: 25,
+            burst: 20,
+            perception: 15,
+            intelligence: 25,
+            strength: 15
+        };
+        
+        // 初始化雷达图
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        let radarChart = new Chart(ctx, {
+            type: 'radar',
             data: {
-                labels: [],
-                datasets: [
-                    {
-                        label: '每天进步1%',
-                        data: [],
-                        borderColor: '#4cd964',
-                        backgroundColor: 'rgba(76, 217, 100, 0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4 // 这个值会使线条更弯曲
-                    },
-                    {
-                        label: '每天退步1%',
-                        data: [],
-                        borderColor: '#ff3b30',
-                        backgroundColor: 'rgba(255, 59, 48, 0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4 // 这个值会使线条更弯曲
-                    }
-                ]
+                labels: ['持久续航', '瞬时爆发', '环境感知', '决策智能', '力量强度'],
+                datasets: [{
+                    label: '能力百分比',
+                    data: Object.values(defaultValues),
+                    backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                    borderColor: 'rgba(52, 152, 219, 1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgba(52, 152, 219, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(52, 152, 219, 1)',
+                    pointRadius: 3,
+                    pointHoverRadius: 5
+                }]
             },
             options: {
                 responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: '进步与退步的长期趋势',
-                        color: '#fff',
-                        font: {
-                            size: 18
-                        }
-                    },
-                    legend: {
-                        labels: {
-                            color: '#fff',
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        pointLabels: {
+                            color: '#2c3e50',
                             font: {
-                                size: 14
+                                size: 10,
+                                weight: 'bold'
+                            }
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 100,
+                        ticks: {
+                            stepSize: 20,
+                            color: '#7f8c8d',
+                            backdropColor: 'transparent',
+                            font: {
+                                size: 8
                             }
                         }
                     }
                 },
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: '天数',
-                            color: '#fff'
-                        },
-                        ticks: {
-                            color: '#fff'
-                        },
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
-                        }
+                plugins: {
+                    legend: {
+                        display: false
                     },
-                    y: {
-                        title: {
-                            display: true,
-                            text: '能力倍数',
-                            color: '#fff'
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.raw + '%';
+                            }
                         },
-                        ticks: {
-                            color: '#fff'
-                        },
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
-                        },
-                        type: 'linear' // 改为线性坐标，更容易看出曲线
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        titleColor: '#2c3e50',
+                        bodyColor: '#2c3e50',
+                        borderColor: 'rgba(52, 152, 219, 0.5)',
+                        borderWidth: 1
                     }
                 }
             }
         });
         
-        // 计算函数
-        function calculateResults() {
-            const days = parseInt(daysInput.value);
-            const dailyAmount = parseFloat(dailyAmountInput.value);
+        // 更新总和
+        function updateTotal() {
+            let total = 0;
+            for (let key in inputs) {
+                total += parseInt(inputs[key].value) || 0;
+            }
+            totalElement.textContent = total;
             
-            // 计算进步和退步的结果
-            const progressValue = Math.pow(1.01, days);
-            const regressValue = Math.pow(0.99, days);
+            // 更新值显示
+            for (let key in valueDisplays) {
+                valueDisplays[key].textContent = inputs[key].value;
+            }
             
-            // 计算每天做的量的总量
-            const progressTotalValue = dailyAmount * progressValue;
-            const regressTotalValue = dailyAmount * regressValue;
-            
-            // 更新结果
-            progressResult.textContent = progressValue.toFixed(2);
-            regressResult.textContent = regressValue.toFixed(2);
-            
-            progressDays.textContent = days;
-            regressDays.textContent = days;
-            
-            progressTimes.textContent = progressValue.toFixed(2);
-            regressTimes.textContent = regressValue.toFixed(2);
-            
-            progressTotal.textContent = progressTotalValue.toFixed(2);
-            regressTotal.textContent = regressTotalValue.toFixed(2);
-            
-            // 更新说明中的数字
-            explanationProgress.textContent = Math.pow(1.01, 365).toFixed(1);
-            explanationRegress.textContent = Math.pow(0.99, 365).toFixed(2);
-            
-            // 更新图表
-            updateChart(days);
+            // 检查总和是否为100%
+            if (total === 100) {
+                errorElement.textContent = '';
+                successElement.textContent = '✓ 百分比总和为100%，雷达图已更新！';
+                sumDisplay.classList.remove('invalid');
+                sumDisplay.classList.add('valid');
+                
+                // 更新雷达图数据
+                updateRadarChart();
+            } else {
+                successElement.textContent = '';
+                errorElement.textContent = `⚠ 百分比总和为${total}%，不是100%。请调整数值使总和为100%。`;
+                sumDisplay.classList.remove('valid');
+                sumDisplay.classList.add('invalid');
+            }
         }
         
-        // 更新图表数据
-        function updateChart(days) {
-            const labels = [];
-            const progressData = [];
-            const regressData = [];
-            
-            // 生成足够多的数据点来形成曲线
-            const totalPoints = Math.min(100, days); // 最多100个点，避免性能问题
-            const step = Math.max(1, Math.floor(days / totalPoints));
-            
-            for (let i = 1; i <= days; i += step) {
-                labels.push(i);
-                progressData.push(Math.pow(1.01, i));
-                regressData.push(Math.pow(0.99, i));
+        // 更新雷达图
+        function updateRadarChart() {
+            const newData = [];
+            for (let key in inputs) {
+                newData.push(parseInt(inputs[key].value) || 0);
             }
             
-            // 确保包含最后一天的数据
-            if (days % step !== 0) {
-                labels.push(days);
-                progressData.push(Math.pow(1.01, days));
-                regressData.push(Math.pow(0.99, days));
-            }
-            
-            growthChart.data.labels = labels;
-            growthChart.data.datasets[0].data = progressData;
-            growthChart.data.datasets[1].data = regressData;
-            growthChart.update();
+            radarChart.data.datasets[0].data = newData;
+            radarChart.update();
         }
+        
+        // 为每个输入框添加事件监听器
+        for (let key in inputs) {
+            inputs[key].addEventListener('input', updateTotal);
+        }
+        
+        // 重置按钮功能
+        resetBtn.addEventListener('click', function() {
+            for (let key in inputs) {
+                inputs[key].value = defaultValues[key];
+            }
+            updateTotal();
+        });
+        
+        // 显示/隐藏教学信息
+        let infoVisible = false;
+        showInfoBtn.addEventListener('click', function() {
+            if (infoVisible) {
+                teachingInfo.style.display = 'none';
+                conceptExplanation.style.display = 'none';
+                showInfoBtn.textContent = '显示教学信息';
+            } else {
+                teachingInfo.style.display = 'block';
+                conceptExplanation.style.display = 'block';
+                showInfoBtn.textContent = '隐藏教学信息';
+            }
+            infoVisible = !infoVisible;
+        });
         
         // 初始化
-        calculateResults();
+        updateTotal();
         
-        // 监听天数变化
-        daysInput.addEventListener('input', calculateResults);
-        dailyAmountInput.addEventListener('input', calculateResults);
+        // 根据屏幕高度自动调整
+        function adjustLayout() {
+            if (window.innerHeight < 800) {
+                teachingInfo.style.display = 'none';
+                conceptExplanation.style.display = 'none';
+                showInfoBtn.style.display = 'block';
+            } else {
+                teachingInfo.style.display = 'block';
+                conceptExplanation.style.display = 'block';
+                showInfoBtn.style.display = 'none';
+            }
+        }
         
-        // 预设按钮点击事件
-        presetButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const days = button.getAttribute('data-days');
-                daysInput.value = days;
-                calculateResults();
-            });
-        });
+        // 初始调整
+        adjustLayout();
+        
+        // 窗口大小变化时调整
+        window.addEventListener('resize', adjustLayout);
     </script>
 </body>
 </html>
